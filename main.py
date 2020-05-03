@@ -6,24 +6,56 @@ Eight-Puzzle Using:
 3. A* with the Eucledian Distance Heuristic
 """
 
-import sys, queue
+import sys, heapq
 
 from state import State
+from tree import Tree
+
+class Node():
+   def __init__(self, state, parent_state):
+      self.state = state
+      self.parent_state = parent_state
 
 def uniform_cost_search(initial_state):
-   misplaced_dict = initial_state.misplaced_dict
-   costs_dict = initial_state.cost_dict
-   #print(costs_dict, misplaced_dict)
-   #print(initial_state.get_heuristic())
+   #tree = Tree(initial_state)
+   max_frontier_size, nodes_expanded = 0, 0
+   visited = {}
+   #(g(n)/total_cost, node, path)
+   parent_node = Node(initial_state, initial_state)
+   frontier = []
+   heapq.heappush(frontier, (0, parent_node))
 
-   q = queue.Queue()
+   while frontier:
+      #Upade max_frontier_nodes
+      print('==============================')
+      max_frontier_size = max(len(frontier), max_frontier_size)
+      print(frontier)
+      for item in frontier:
+         print(item)
+         
+      #pop off cheapest node
+      g_cost, node = heapq.heappop(frontier)
+      nodes_expanded += 1
+      node.state.print_state()
+      print('g(n) = {} | h(n) = {}'.format(g_cost, node.state.h_cost))
 
-   swaps = initial_state.get_swaps()
-   for item in swaps:
-      item.print_state()
+      if node.state.hash not in visited:
+         visited[node.state.hash] = node
+         if node.state.h_cost is 0:
+            #Finished
+            print('To solve this problem the search algorithm expanded a total of {} nodes'.format(nodes_expanded))
+            print('The maximum number of nodes in the queue at any one time: {}'.format(max_frontier_size))
+            return 
 
-   #root = Node(initial_state)
-   #Add all children for current frontier
+         moves = node.state.get_moves()
+         for state in moves:
+            new_node = Node(state, node)
+            heapq.heappush(frontier, (state.g_cost, new_node))
+
+         
+
+   # print('To solve this problem the search algorithm expanded a total of {} nodes'.format(len(visited)))
+   # print('The maximum number of nodes in the queue at any one time: {}'.format(max_frontier_size))
 
 def create_custom_puzzle():
    """
@@ -52,14 +84,14 @@ def create_default_puzzle():
    Creates a default starting puzzle
    """
    default = [
-      [1, 2, 3],
-      [4, 5, 6],
-      [8, 0, 7]
+      [0, 1, 2],
+      [4, 5, 3],
+      [7, 8, 6]
    ]
 
    return default
 
-def main_loop(state):
+def algorithm_selection(state):
    print('Enter your choice of algorithm')
    print('1: Uniform Cost Search (Default)')
    print('2. A* with Misplaced Tile Heuristic')
@@ -96,11 +128,7 @@ def main():
 
    keep_running = True
    while(keep_running):
-      keep_running = main_loop(state)
-
-def test():
-   test_dict = get_position_dict()
-   print(test_dict)
+      keep_running = algorithm_selection(state)
 
 if __name__ == "__main__":
    main()
