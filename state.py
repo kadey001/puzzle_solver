@@ -77,25 +77,25 @@ class State:
       state_copy = copy.deepcopy(self.current_state)
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1]] = state_copy[self.empty_tile_location[0] + 1][self.empty_tile_location[1]]
       state_copy[self.empty_tile_location[0] + 1][self.empty_tile_location[1]] = 0
-      return State(state_copy, self.g_cost, last_move='d')
+      return State(state_copy, self.g_cost, len(self.current_state), last_move='d')
 
    def move_up(self):
       state_copy = copy.deepcopy(self.current_state)
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1]] = state_copy[self.empty_tile_location[0] - 1][self.empty_tile_location[1]]
       state_copy[self.empty_tile_location[0] - 1][self.empty_tile_location[1]] = 0
-      return State(state_copy, self.g_cost, last_move='u')
+      return State(state_copy, self.g_cost, len(self.current_state),last_move='u')
 
    def move_right(self):
       state_copy = copy.deepcopy(self.current_state)
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1]] = state_copy[self.empty_tile_location[0]][self.empty_tile_location[1] + 1]
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1] + 1] = 0
-      return State(state_copy, self.g_cost, last_move='r')
+      return State(state_copy, self.g_cost, len(self.current_state), last_move='r')
 
    def move_left(self):
       state_copy = copy.deepcopy(self.current_state)
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1]] = state_copy[self.empty_tile_location[0]][self.empty_tile_location[1] - 1]
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1] - 1] = 0
-      return State(state_copy, self.g_cost, last_move='l')
+      return State(state_copy, self.g_cost, len(self.current_state), last_move='l')
 
    def get_moves(self):
       """Gives list of all possible move states that can be made from the empty tile's location"""
