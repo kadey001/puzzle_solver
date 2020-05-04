@@ -11,9 +11,9 @@ from state import State
 from tree import Tree
 
 class Node():
-   def __init__(self, state, parent_state):
+   def __init__(self, state, parent_node):
       self.state = state
-      self.parent_state = parent_state
+      self.parent_node = parent_node
 
 def uniform_cost_search(initial_state):
    #tree = Tree(initial_state)
@@ -26,30 +26,29 @@ def uniform_cost_search(initial_state):
 
    while frontier:
       #Upade max_frontier_nodes
-      print('==============================')
+      #print('==============================')
       max_frontier_size = max(len(frontier), max_frontier_size)
-      # print(frontier)
-      # for item in frontier:
-      #    print(item)
 
       #pop off cheapest node
       g_cost, node = heapq.heappop(frontier)
       nodes_expanded += 1
       # node.state.print_state()
-      print('g(n) = {} | h(n) = {}'.format(g_cost, node.state.h_cost))
+      #print('g(n) = {} | h(n) = {}'.format(g_cost, node.state.h_cost))
 
       if not node.state.current_state in visited:
          visited.append(node.state.current_state)
-         node.state.print_state()
+         #node.state.print_state()
          if node.state.h_cost is 0:
             #Finished
             print('To solve this problem the search algorithm expanded a total of {} nodes'.format(nodes_expanded))
             print('The maximum number of nodes in the queue at any one time: {}'.format(max_frontier_size))
-            return 
+            return (node, parent_node)
 
          moves = node.state.get_moves()
          for state in moves:
+            #print('Parent: {}'.format(node))
             new_node = Node(state, node)
+            #print('New Node: {}'.format(new_node))
             heapq.heappush(frontier, (state.g_cost, new_node))
 
 def a_star_tile_heuristic_search(initial_state):
@@ -85,8 +84,8 @@ def create_default_puzzle():
    Creates a default starting puzzle
    """
    default = [
-      [1, 2, 3],
-      [0, 4, 5],
+      [2, 3, 0],
+      [1, 4, 5],
       [7, 8, 6]
    ]
 
@@ -109,7 +108,18 @@ def algorithm_selection(state):
       return False
    else:
       print('Uniform Cost Search')
-      uniform_cost_search(state)
+      result_node, parent_node = uniform_cost_search(state)
+      optimal_solution = []
+
+      while not result_node is parent_node:
+         optimal_solution.append(result_node.state)
+         result_node = result_node.parent_node
+
+      for index in range(len(optimal_solution) - 1, 0, -1):
+         state = optimal_solution[index]
+         state.print_state()
+         print('h(n) = {}  |  g(n) = {}'.format(state.h_cost, state.g_cost))
+         #print('Previous Move: {}'.format(state.last_move))
       pass
 
    return True
@@ -125,12 +135,20 @@ def main():
 
    print('Puzzle Selected')
    utility.set_position_dict(len(puzzle_set))
-   state = State(puzzle_set, 0, len(puzzle_set))
+   state = State(puzzle_set, 0, len(puzzle_set), first_state=True)
    state.print_state()
 
    keep_running = True
    while(keep_running):
       keep_running = algorithm_selection(state)
 
+def test():
+   puzzle_set = create_default_puzzle()
+   utility.set_position_dict()
+   state = State(puzzle_set, 0, 3, first_state=True)
+   state.print_state()
+   print(state.g_cost, state.h_cost)
+
 if __name__ == "__main__":
+   #test()
    main()

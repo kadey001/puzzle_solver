@@ -1,13 +1,14 @@
 import copy, utility
 
 class State:
-   def __init__(self, initial_state, prev_cost = 0, n = 3, last_move = None, parent_state = None):
+   def __init__(self, initial_state, prev_cost = 0, n = 3, last_move = None, parent_state = None, first_state = None):
       #Declaring variables
       self.current_state = initial_state
       self.n = n
       self.g_cost = prev_cost
       self.last_move = last_move
       self.parent_state = parent_state
+      self.first_state = first_state
       self.misplaced_dict = {}
       self.cost_dict = {}
       #Calling functions
@@ -19,7 +20,8 @@ class State:
 
    def update_cost(self):
       """Updates current state's total cost with its cost + prev cost"""
-      self.g_cost += self.h_cost
+      if not self.first_state:
+         self.g_cost += self.h_cost
 
    def print_state(self):
       """Prints out the current state of the puzzle"""
@@ -95,6 +97,7 @@ class State:
       state_copy = copy.deepcopy(self.current_state)
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1]] = state_copy[self.empty_tile_location[0]][self.empty_tile_location[1] - 1]
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1] - 1] = 0
+      print(self.g_cost)
       return State(state_copy, self.g_cost, len(self.current_state), last_move='l')
 
    def get_moves(self):
