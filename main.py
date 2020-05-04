@@ -8,7 +8,6 @@ Eight-Puzzle Using:
 
 import sys, heapq, utility
 from state import State
-from tree import Tree
 
 class Node():
    def __init__(self, state, parent_node):
