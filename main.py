@@ -59,44 +59,6 @@ def a_star_eucledian_dist_search(initial_state):
    pass
 
 def create_custom_puzzle():
-   def number_to_wordth(n):
-      ones = ["", "first ","second ","third ","fourth ", "fifth ", "sixth ","seventh ","eighth ","ninth ","tenth ","eleventh ","twelveth ", "thirteenth ", "fourteenth ", "fifteenth ","sixteenth ","seventeenth ", "eighteenth ","nineteenth "]
-      twenties = ["","","twentieth ","thirtieth ","fortieth ", "fiftieth ","sixtieth ","seventieth ","eightieth ","ninetieth "]
-      thousands = ["","thousandth ","millionth ", "billionth ", "trillionth ", "quadrillionth ", "quintillionth ", "sextillionth ", "septillionth ","octillion ", "nonillionth ", "decillionth ", "undecillionth ", "duodecillionth ", "tredecillionth ", "quattuordecillionth ", "quindecillionth ", "sexdecillionth ", "septendecillionth ", "octodecillionth ", "novemdecillionth ", "vigintillionth "]
-      def num999(n):
-         c = n % 10 # singles digit
-         b = ((n % 100) - c) / 10 # tens digit
-         a = ((n % 1000) - (b * 10) - c) / 100 # hundreds digit
-         t = ""
-         h = ""
-         if a != 0 and b == 0 and c == 0:
-            t = ones[a] + "hundred "
-         elif a != 0:
-            t = ones[a] + "hundred and "
-         if b <= 1:
-            h = ones[n%100]
-         elif b > 1:
-            h = twenties[b] + ones[c]
-         st = t + h
-         return st
-      def num2word(num):
-         if num == 0: return 'zero'
-         i = 3
-         n = str(num)
-         word = ""
-         k = 0
-         while(i == 3):
-            nw = n[-i:]
-            n = n[:-i]
-            if int(nw) == 0:
-                  word = num999(int(nw)) + thousands[int(nw)] + word
-            else:
-                  word = num999(int(nw)) + thousands[k] + word
-            if n == '':
-                  i = i+1
-            k += 1
-         return word[:-1]
-      return num2word(n)
    """
    Prompts user to create a custom starting puzzle
    Puzzle should be formatted as:
@@ -109,11 +71,11 @@ def create_custom_puzzle():
    ]
    """
    print('Enter your puzzle, use a zero to represent the blank space and use spaces/tabs between numbers')
-   print('Enter the first row:\n')
+   print('Enter row 1:\n')
    rows = []
    rows.append([int(x) for x in sys.stdin.readline().split()])
    for i in range(1,len(rows[0])):
-      print('Enter the {} row:\n'.format(number_to_wordth(i+1)))
+      print('Enter row {}:\n'.format(i + 1))
       rows.append([int(x) for x in sys.stdin.readline().split()])
 
    return rows
@@ -163,7 +125,7 @@ def main():
 
    print('Puzzle Selected')
    utility.set_position_dict(len(puzzle_set))
-   state = State(puzzle_set)
+   state = State(puzzle_set, 0, len(puzzle_set))
    state.print_state()
 
    keep_running = True
