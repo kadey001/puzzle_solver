@@ -1,23 +1,4 @@
-import copy
-
-CONST_PUZZLE_SIZE = 3
-
-#Set up a dictionary for the size of the puzzle that has the correct location for each number
-def get_position_dict(n = 3):
-   """Creates a dict for each value's correct position"""
-   position_dict = {}
-   value = 1
-   for i in range(n):
-      for j in range(n):
-         if i * j >= n**2:
-            position_dict[0] = (i, j)
-            return position_dict
-         else:
-            position_dict[value] = (i, j)
-            value += 1
-   return position_dict
-
-position_dict = get_position_dict(CONST_PUZZLE_SIZE)
+import copy, utility
 
 class State:
    def __init__(self, initial_state, prev_cost = 0, n = 3, last_move = None, parent_state = None):
@@ -29,7 +10,6 @@ class State:
       self.parent_state = parent_state
       self.misplaced_dict = {}
       self.cost_dict = {}
-      self.hash = 0
       #Calling functions
       self.set_misplaced_dict()
       self.set_cost_dict()
@@ -67,7 +47,6 @@ class State:
                self.misplaced_dict[value] = (row, colum)
             
             expected_value += 1
-            self.hash += (expected_value + 15) * value
 
    def set_cost_dict(self):
       """
@@ -82,7 +61,7 @@ class State:
          misplaced_row = misplaced_item_position[0]
          misplaced_colum = misplaced_item_position[1]
 
-         expected_item_position = position_dict[key]
+         expected_item_position = utility.position_dict[key]
          correct_row = expected_item_position[0]
          correct_colum = expected_item_position[1]
 
