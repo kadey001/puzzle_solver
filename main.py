@@ -16,39 +16,52 @@ class Node():
       self.parent_node = parent_node
 
 def uniform_cost_search(initial_state):
-   #tree = Tree(initial_state)
    max_frontier_size, nodes_expanded = 0, 0
    visited = []
-   #(g(n)/total_cost, node, path)
+   #(g_cost, node, path)
    parent_node = Node(initial_state, initial_state)
    frontier = []
    heapq.heappush(frontier, (0, parent_node))
 
    while frontier:
       #Upade max_frontier_nodes
-      #print('==============================')
       max_frontier_size = max(len(frontier), max_frontier_size)
 
       #pop off cheapest node
-      g_cost, node = heapq.heappop(frontier)
+      cheapest_element = heapq.heappop(frontier)
+      node = cheapest_element[1]
       nodes_expanded += 1
-      # node.state.print_state()
-      #print('g(n) = {} | h(n) = {}'.format(g_cost, node.state.h_cost))
 
       if not node.state.current_state in visited:
          visited.append(node.state.current_state)
-         #node.state.print_state()
          if node.state.h_cost is 0:
-            #Finished
+            #Finished, output results
+            optimal_solution = []
+            result_node = node
+
+            while not result_node is parent_node:
+               optimal_solution.append(result_node.state)
+               result_node = result_node.parent_node
+
+            print('Expanding state')
+            initial_state.print_state()
+
+            for index in range(len(optimal_solution) - 1, 0, -1):
+               state = optimal_solution[index]
+               print('The best state to expand with g(n) = {} and h(n) = {} is...'.format(state.g_cost, state.h_cost))
+               state.print_state()
+               print('Expanding this node...\n')
+            pass
+
+            print('Goal!!!')
+            optimal_solution[0].print_state()
             print('To solve this problem the search algorithm expanded a total of {} nodes'.format(nodes_expanded))
             print('The maximum number of nodes in the queue at any one time: {}'.format(max_frontier_size))
-            return (node, parent_node)
+            return 
 
          moves = node.state.get_moves()
          for state in moves:
-            #print('Parent: {}'.format(node))
             new_node = Node(state, node)
-            #print('New Node: {}'.format(new_node))
             heapq.heappush(frontier, (state.g_cost, new_node))
 
 def a_star_tile_heuristic_search(initial_state):
@@ -108,19 +121,7 @@ def algorithm_selection(state):
       return False
    else:
       print('Uniform Cost Search')
-      result_node, parent_node = uniform_cost_search(state)
-      optimal_solution = []
-
-      while not result_node is parent_node:
-         optimal_solution.append(result_node.state)
-         result_node = result_node.parent_node
-
-      for index in range(len(optimal_solution) - 1, 0, -1):
-         state = optimal_solution[index]
-         state.print_state()
-         print('h(n) = {}  |  g(n) = {}'.format(state.h_cost, state.g_cost))
-         #print('Previous Move: {}'.format(state.last_move))
-      pass
+      uniform_cost_search(state)
 
    return True
 

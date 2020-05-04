@@ -97,7 +97,6 @@ class State:
       state_copy = copy.deepcopy(self.current_state)
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1]] = state_copy[self.empty_tile_location[0]][self.empty_tile_location[1] - 1]
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1] - 1] = 0
-      print(self.g_cost)
       return State(state_copy, self.g_cost, len(self.current_state), last_move='l')
 
    def get_moves(self):
