@@ -15,7 +15,8 @@ class Node():
       self.parent_node = parent_node
 
 def uniform_cost_search(initial_state):
-   initial_state.heuristic = 'manhattan'
+   initial_state.heuristic = 'eucledian'
+   initial_state.algorithm = 'uniform'
    max_frontier_size, nodes_expanded = 0, 0
    visited = []
    #(g_cost, node, path)
@@ -36,28 +37,8 @@ def uniform_cost_search(initial_state):
          visited.append(node.state.current_state)
          if node.state.h_cost is 0:
             #Finished, output results
-            optimal_solution = []
-            result_node = node
-
-            while not result_node is parent_node:
-               optimal_solution.append(result_node.state)
-               result_node = result_node.parent_node
-
-            print('Expanding state')
-            initial_state.print_state()
-
-            for index in range(len(optimal_solution) - 1, 0, -1):
-               state = optimal_solution[index]
-               print('The best state to expand with g(n) = {} is...'.format(state.g_cost))
-               state.print_state()
-               print('Expanding this node...\n')
-            pass
-
-            print('Goal!!!')
-            optimal_solution[0].print_state()
-            print('To solve this problem the search algorithm expanded a total of {} nodes'.format(nodes_expanded))
-            print('The maximum number of nodes in the queue at any one time: {}'.format(max_frontier_size))
-            return 
+            output_results(initial_state, parent_node, node, nodes_expanded, max_frontier_size)
+            return
 
          moves = node.state.get_moves()
          for state in moves:
@@ -65,7 +46,8 @@ def uniform_cost_search(initial_state):
             heapq.heappush(frontier, (state.g_cost, new_node))
 
 def a_star_tile_heuristic_search(initial_state):
-   initial_state.heuristic = 'manhattan'
+   initial_state.heuristic = 'misplaced_tiles'
+   initial_state.algorithm = 'a_star'
    max_frontier_size, nodes_expanded = 0, 0
    visited = []
    #(g_cost, node, path)
@@ -86,27 +68,7 @@ def a_star_tile_heuristic_search(initial_state):
          visited.append(node.state.current_state)
          if node.state.h_cost is 0:
             #Finished, output results
-            optimal_solution = []
-            result_node = node
-
-            while not result_node is parent_node:
-               optimal_solution.append(result_node.state)
-               result_node = result_node.parent_node
-
-            print('Expanding state')
-            initial_state.print_state()
-
-            for index in range(len(optimal_solution) - 1, 0, -1):
-               state = optimal_solution[index]
-               print('The best state to expand with g(n) + h(n) = {} + {} = {} is...'.format(state.g_cost, state.h_cost, state.g_cost + state.h_cost))
-               state.print_state()
-               print('Expanding this node...\n')
-            pass
-
-            print('Goal!!!')
-            optimal_solution[0].print_state()
-            print('To solve this problem the search algorithm expanded a total of {} nodes'.format(nodes_expanded))
-            print('The maximum number of nodes in the queue at any one time: {}'.format(max_frontier_size))
+            output_results(initial_state, parent_node, node, nodes_expanded, max_frontier_size)
             return 
 
          moves = node.state.get_moves()
@@ -117,6 +79,7 @@ def a_star_tile_heuristic_search(initial_state):
 
 def a_star_eucledian_dist_search(initial_state):
    initial_state.heuristic = 'eucledian'
+   initial_state.algorithm = 'a_star'
    max_frontier_size, nodes_expanded = 0, 0
    visited = []
    #(g_cost, node, path)
@@ -137,27 +100,7 @@ def a_star_eucledian_dist_search(initial_state):
          visited.append(node.state.current_state)
          if node.state.h_cost is 0:
             #Finished, output results
-            optimal_solution = []
-            result_node = node
-
-            while not result_node is parent_node:
-               optimal_solution.append(result_node.state)
-               result_node = result_node.parent_node
-
-            print('Expanding state')
-            initial_state.print_state()
-
-            for index in range(len(optimal_solution) - 1, 0, -1):
-               state = optimal_solution[index]
-               print('The best state to expand with g(n) + h(n) = {} + {} = {} is...'.format(state.g_cost, state.h_cost, state.g_cost + state.h_cost))
-               state.print_state()
-               print('Expanding this node...\n')
-            pass
-
-            print('Goal!!!')
-            optimal_solution[0].print_state()
-            print('To solve this problem the search algorithm expanded a total of {} nodes'.format(nodes_expanded))
-            print('The maximum number of nodes in the queue at any one time: {}'.format(max_frontier_size))
+            output_results(initial_state, parent_node, node, nodes_expanded, max_frontier_size)
             return 
 
          moves = node.state.get_moves()
@@ -199,6 +142,33 @@ def create_default_puzzle():
    ]
 
    return default
+
+def output_results(initial_state, parent_node, result_node, nodes_expanded, max_frontier_size):
+   #Finished, output results
+   optimal_solution = []
+
+   while not result_node is parent_node:
+      optimal_solution.append(result_node.state)
+      result_node = result_node.parent_node
+
+   print('Expanding state')
+   initial_state.print_state()
+
+   for index in range(len(optimal_solution) - 1, 0, -1):
+      state = optimal_solution[index]
+      if state.algorithm is 'a_star':
+         print('The best state to expand with g(n) + h(n) = {} + {} = {} is...'.format(state.g_cost, state.h_cost, state.g_cost + state.h_cost))
+      else:
+         print('The best state to expand with g(n) = {} is...'.format(state.g_cost))
+      state.print_state()
+      print('Expanding this node...\n')
+   pass
+
+   print('Goal!!!')
+   optimal_solution[0].print_state()
+   print('To solve this problem the search algorithm expanded a total of {} nodes'.format(nodes_expanded))
+   print('The maximum number of nodes in the queue at any one time: {}'.format(max_frontier_size))
+   return 
 
 def algorithm_selection(state):
    print('Enter your choice of algorithm')
