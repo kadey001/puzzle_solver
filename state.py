@@ -1,14 +1,13 @@
 import copy, utility, math
 
 class State:
-   def __init__(self, initial_state, prev_cost = 0, n = 3, last_move = None, parent_state = None,
+   def __init__(self, initial_state, prev_cost = 0, n = 3, last_move = None,
       first_state = None, heuristic = None, algorithm = None):
       #Declaring variables
       self.current_state = initial_state
       self.n = n
       self.g_cost = prev_cost
       self.last_move = last_move
-      self.parent_state = parent_state
       self.first_state = first_state
       self.heuristic = heuristic
       self.algorithm = algorithm
@@ -30,6 +29,7 @@ class State:
             self.g_cost += self.h_cost
 
    def get_h_cost(self):
+      """Returns the h_cost based on the heuristic"""
       if self.heuristic is 'misplaced_tiles':
          return self.num_misplaced
       else:
@@ -67,6 +67,7 @@ class State:
       """
       Finds all the costs for each misplaced square and adds them to a cost dictionary
       with the keys being the square values {key=value, cost}
+      Uses Manhattan distance by default
       """
       
       for key in self.misplaced_dict:
@@ -84,6 +85,7 @@ class State:
          if self.heuristic is 'eucledian':
             cost = math.sqrt((misplaced_row - correct_row)**2 + (misplaced_colum - correct_colum)**2)
          else:
+            #Defaults to Manhattan distance
             cost = abs(misplaced_row - correct_row) + abs(misplaced_colum - correct_colum)
          self.cost_dict[key] = cost
 
