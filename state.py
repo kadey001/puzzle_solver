@@ -29,6 +29,12 @@ class State:
          elif self.algorithm is 'uniform':
             self.g_cost += self.h_cost
 
+   def get_h_cost(self):
+      if self.heuristic is 'misplaced_tiles':
+         return self.num_misplaced
+      else:
+         return sum(self.cost_dict.values())
+
    def print_state(self):
       """Prints out the current state of the puzzle"""
       for row in self.current_state:
@@ -80,12 +86,6 @@ class State:
          else:
             cost = abs(misplaced_row - correct_row) + abs(misplaced_colum - correct_colum)
          self.cost_dict[key] = cost
-
-   def get_h_cost(self):
-      if self.heuristic is 'misplaced_tiles':
-         return self.num_misplaced
-      else:
-         return sum(self.cost_dict.values())
 
    #Operator Functions create and return a state for a given move
    def move_down(self):

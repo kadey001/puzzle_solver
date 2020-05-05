@@ -45,6 +45,8 @@ def uniform_cost_search(initial_state):
             new_node = Node(state, node)
             heapq.heappush(frontier, (state.g_cost, new_node))
 
+   return 'Failure'
+
 def a_star_tile_heuristic_search(initial_state):
    initial_state.heuristic = 'misplaced_tiles'
    initial_state.algorithm = 'a_star'
