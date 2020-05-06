@@ -2,7 +2,7 @@ import copy, utility, math
 
 class State:
    def __init__(self, initial_state, prev_cost = 0, n = 3, last_move = None,
-      first_state = None, heuristic = None, algorithm = None):
+      first_state = False, heuristic = None, algorithm = None):
       #Declaring variables
       self.current_state = initial_state
       self.n = n

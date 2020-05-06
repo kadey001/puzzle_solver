@@ -6,7 +6,7 @@ Eight-Puzzle Using:
 3. A* with the Eucledian Distance Heuristic
 """
 
-import sys, heapq, utility
+import sys, heapq, utility, timeit
 from state import State
 
 class Node():
@@ -45,9 +45,13 @@ def graph_search(initial_state, heuristic, algorithm):
             output_optimal(initial_state, parent_node, node)
             return 'Success'
 
-         print('The best state to expand with g(n) = {} h(n) = {} is...'.format(node.state.g_cost, node.state.h_cost))
-         node.state.print_state()
-         print('Expanding this node...')
+         if node.state.first_state:
+            print('Expanding state')
+            node.state.print_state()
+         else:
+            print('The best state to expand with g(n) = {} h(n) = {} is...'.format(node.state.g_cost, node.state.h_cost))
+            node.state.print_state()
+            print('Expanding this node...')
 
          moves = node.state.get_moves()
          for state in moves:
@@ -108,17 +112,17 @@ def output_optimal(initial_state, parent_node, result_node):
       result_node = result_node.parent_node
 
    print('==================')
-   print('Final Optimal Solution Trace')
+   print('Final Solution Trace [Extra Credit]')
    initial_state.print_state()
 
    for index in range(len(optimal_solution) - 1, 0, -1):
       state = optimal_solution[index]
       print(state.last_move)
       state.print_state()
-   pass
-
-   print('Finished')
+   
+   print(optimal_solution[0].last_move)
    optimal_solution[0].print_state()
+   print('Finished')
    return 
 
 def algorithm_selection(state):
@@ -132,13 +136,19 @@ def algorithm_selection(state):
       print('A* with Misplaced Tile Heuristic')
       heuristic = 'misplaced_tiles'
       algorithm = 'a_star'
+      start = timeit.default_timer()
       result = graph_search(state, heuristic, algorithm)
+      stop = timeit.default_timer()
+      print('Time: {}'.format(stop - start))
       pass
    elif int(selection) is 3:
       print('A* with the Eucledian Distance Heuristic')
       heuristic = 'eucledian'
       algorithm = 'a_star'
+      start = timeit.default_timer()
       result = graph_search(state, heuristic, algorithm)
+      stop = timeit.default_timer()
+      print('Time: {}'.format(stop - start))
       pass
    elif int(selection) is 4:
       return False
@@ -146,8 +156,10 @@ def algorithm_selection(state):
       print('Uniform Cost Search')
       heuristic = 'eucledian'
       algorithm = 'uniform'
+      start = timeit.default_timer()
       result = graph_search(state, heuristic, algorithm)
-
+      stop = timeit.default_timer()
+      print('Time: {}'.format(stop - start))
    print(result)
 
    return True
