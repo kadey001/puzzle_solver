@@ -48,7 +48,6 @@ def graph_search(initial_state, heuristic, algorithm):
             if algorithm is 'a_star':
                heapq.heappush(frontier, (state.g_cost + state.h_cost, new_node))
             else: 
-               print(state.g_cost)
                heapq.heappush(frontier, (state.g_cost, new_node))
    return 'Failure'
 
