@@ -101,25 +101,25 @@ class State:
       state_copy = copy.deepcopy(self.current_state)
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1]] = state_copy[self.empty_tile_location[0] + 1][self.empty_tile_location[1]]
       state_copy[self.empty_tile_location[0] + 1][self.empty_tile_location[1]] = 0
-      return State(state_copy, self.g_cost, len(self.current_state), last_move='d', heuristic=self.heuristic, algorithm=self.algorithm)
+      return State(state_copy, self.g_cost, len(self.current_state), last_move='Down', heuristic=self.heuristic, algorithm=self.algorithm)
 
    def move_up(self):
       state_copy = copy.deepcopy(self.current_state)
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1]] = state_copy[self.empty_tile_location[0] - 1][self.empty_tile_location[1]]
       state_copy[self.empty_tile_location[0] - 1][self.empty_tile_location[1]] = 0
-      return State(state_copy, self.g_cost, len(self.current_state),last_move='u', heuristic=self.heuristic, algorithm=self.algorithm)
+      return State(state_copy, self.g_cost, len(self.current_state),last_move='Up', heuristic=self.heuristic, algorithm=self.algorithm)
 
    def move_right(self):
       state_copy = copy.deepcopy(self.current_state)
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1]] = state_copy[self.empty_tile_location[0]][self.empty_tile_location[1] + 1]
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1] + 1] = 0
-      return State(state_copy, self.g_cost, len(self.current_state), last_move='r', heuristic=self.heuristic, algorithm=self.algorithm)
+      return State(state_copy, self.g_cost, len(self.current_state), last_move='Right', heuristic=self.heuristic, algorithm=self.algorithm)
 
    def move_left(self):
       state_copy = copy.deepcopy(self.current_state)
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1]] = state_copy[self.empty_tile_location[0]][self.empty_tile_location[1] - 1]
       state_copy[self.empty_tile_location[0]][self.empty_tile_location[1] - 1] = 0
-      return State(state_copy, self.g_cost, len(self.current_state), last_move='l', heuristic=self.heuristic, algorithm=self.algorithm)
+      return State(state_copy, self.g_cost, len(self.current_state), last_move='Left', heuristic=self.heuristic, algorithm=self.algorithm)
 
    def get_moves(self):
       """Gives list of all possible puzzle states that can be made from moving the empty tile's location"""

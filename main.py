@@ -39,8 +39,15 @@ def graph_search(initial_state, heuristic, algorithm):
          visited.append(node.state.current_state)
          if node.state.is_goal():
             #Finished, output results
-            output_results(initial_state, parent_node, node, nodes_expanded, max_frontier_size)
+            print('Goal!!!\n')
+            print('To solve this problem the search algorithm expanded a total of {} nodes'.format(nodes_expanded))
+            print('The maximum number of nodes in the queue at any one time: {}\n'.format(max_frontier_size))
+            output_optimal(initial_state, parent_node, node)
             return 'Success'
+
+         print('The best state to expand with g(n) = {} h(n) = {} is...'.format(node.state.g_cost, node.state.h_cost))
+         node.state.print_state()
+         print('Expanding this node...')
 
          moves = node.state.get_moves()
          for state in moves:
@@ -92,7 +99,7 @@ def create_default_puzzle():
    ]
    return puzzles[int(selection) - 1]
 
-def output_results(initial_state, parent_node, result_node, nodes_expanded, max_frontier_size):
+def output_optimal(initial_state, parent_node, result_node):
    #Finished, output results
    optimal_solution = []
 
@@ -100,23 +107,18 @@ def output_results(initial_state, parent_node, result_node, nodes_expanded, max_
       optimal_solution.append(result_node.state)
       result_node = result_node.parent_node
 
-   print('Expanding state')
+   print('==================')
+   print('Final Optimal Solution Trace')
    initial_state.print_state()
 
    for index in range(len(optimal_solution) - 1, 0, -1):
       state = optimal_solution[index]
-      if state.algorithm is 'a_star':
-         print('The best state to expand with g(n) + h(n) = {} + {} = {} is...'.format(state.g_cost, state.h_cost, state.g_cost + state.h_cost))
-      else:
-         print('The best state to expand with g(n) = {} is...'.format(state.g_cost))
+      print(state.last_move)
       state.print_state()
-      print('Expanding this node...\n')
    pass
 
-   print('Goal!!!')
+   print('Finished')
    optimal_solution[0].print_state()
-   print('To solve this problem the search algorithm expanded a total of {} nodes'.format(nodes_expanded))
-   print('The maximum number of nodes in the queue at any one time: {}'.format(max_frontier_size))
    return 
 
 def algorithm_selection(state):
