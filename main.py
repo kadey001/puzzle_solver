@@ -15,13 +15,13 @@ class Node():
       self.parent_node = parent_node
 
 def graph_search(initial_state, heuristic, algorithm):
-   if initial_state.h_cost is 0:
-      return 'Already Solved'
+   if initial_state.is_goal():
+      return 'Solved'
+   #Set intial state's heuristic and algorithm type so operations are performed correctly
    initial_state.heuristic = heuristic
    initial_state.algorithm = algorithm
    max_frontier_size, nodes_expanded = 0, 0
    visited = []
-   #(g_cost, node, path)
    parent_node = Node(initial_state, initial_state)
    frontier = []
    heapq.heappush(frontier, (0, parent_node))
@@ -30,14 +30,14 @@ def graph_search(initial_state, heuristic, algorithm):
       #Upade max_frontier_nodes
       max_frontier_size = max(len(frontier), max_frontier_size)
 
-      #pop off cheapest node
+      #pop off cheapest costing node from heapq
       cheapest_element = heapq.heappop(frontier)
       node = cheapest_element[1]
       nodes_expanded += 1
 
       if not node.state.current_state in visited:
          visited.append(node.state.current_state)
-         if node.state.h_cost is 0:
+         if node.state.is_goal():
             #Finished, output results
             output_results(initial_state, parent_node, node, nodes_expanded, max_frontier_size)
             return 'Success'
@@ -48,8 +48,8 @@ def graph_search(initial_state, heuristic, algorithm):
             if algorithm is 'a_star':
                heapq.heappush(frontier, (state.g_cost + state.h_cost, new_node))
             else: 
+               print(state.g_cost)
                heapq.heappush(frontier, (state.g_cost, new_node))
-
    return 'Failure'
 
 def create_custom_puzzle():
@@ -71,7 +71,6 @@ def create_custom_puzzle():
    for i in range(1,len(rows[0])):
       print('Enter row {}:\n'.format(i + 1))
       rows.append([int(x) for x in sys.stdin.readline().split()])
-
    return rows
 
 def create_default_puzzle():
@@ -86,14 +85,12 @@ def create_default_puzzle():
    print('5: Oh Boy')
    selection = input()
    puzzles = [
-      #Trivial
       [[1, 2, 3], [4, 5, 6], [7, 8, 0]],
       [[1, 2, 3], [4, 5, 6], [7, 0, 8]],
       [[1, 2, 0], [4, 5, 3], [7, 8, 6]],
       [[0, 1, 2], [4, 5, 3], [7, 8, 6]],
       [[8, 7, 1], [6, 0, 2], [5, 4, 3]],
    ]
-
    return puzzles[int(selection) - 1]
 
 def output_results(initial_state, parent_node, result_node, nodes_expanded, max_frontier_size):
@@ -176,13 +173,5 @@ def main():
       while(keep_running):
          keep_running = algorithm_selection(state)
 
-def test():
-   puzzle_set = create_default_puzzle()
-   utility.set_position_dict()
-   state = State(puzzle_set, 0, 3, first_state=True)
-   state.print_state()
-   print(state.g_cost, state.h_cost)
-
 if __name__ == "__main__":
-   #test()
    main()

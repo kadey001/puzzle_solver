@@ -16,17 +16,17 @@ class State:
       self.num_misplaced = 0
       #Calling settup functions
       self.set_misplaced_dict()
-      self.set_cost_dict()
-      self.h_cost = self.get_h_cost()
-      self.update_cost()
+      if algorithm is 'uniform':
+         self.h_cost = 0
+      else:
+         self.set_cost_dict()
+         self.h_cost = self.get_h_cost()
+      self.update_g_cost()
 
-   def update_cost(self):
+   def update_g_cost(self):
       """Updates current state's total cost with its cost + prev cost"""
       if not self.first_state:
-         if self.algorithm is 'a_star':
-            self.g_cost += 1
-         elif self.algorithm is 'uniform':
-            self.g_cost += self.h_cost
+         self.g_cost += 1
 
    def get_h_cost(self):
       """Returns the h_cost based on the heuristic"""
@@ -34,6 +34,14 @@ class State:
          return self.num_misplaced
       else:
          return sum(self.cost_dict.values())
+
+   def is_goal(self):
+      for row, row_item in enumerate(self.current_state):
+         for colum, item in enumerate(row_item):
+            if not item is utility.goal_state[row][colum]:
+               return False
+      
+      return True
 
    def print_state(self):
       """Prints out the current state of the puzzle"""
@@ -69,7 +77,6 @@ class State:
       with the keys being the square values {key=value, cost}
       Uses Manhattan distance by default
       """
-      
       for key in self.misplaced_dict:
          #(row, colum, value) of a misplaced element
          misplaced_item_position = self.misplaced_dict[key]
@@ -115,7 +122,7 @@ class State:
       return State(state_copy, self.g_cost, len(self.current_state), last_move='l', heuristic=self.heuristic, algorithm=self.algorithm)
 
    def get_moves(self):
-      """Gives list of all possible move states that can be made from the empty tile's location"""
+      """Gives list of all possible puzzle states that can be made from moving the empty tile's location"""
       moves = []
       L, R, U, D = False, False, False, False
       #print('Empty Tile Location = {}'.format(self.empty_tile_location))
